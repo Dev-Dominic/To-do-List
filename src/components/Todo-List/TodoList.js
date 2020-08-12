@@ -29,6 +29,20 @@ class TodoList extends React.Component {
     }));
   };
 
+  // Marks an item as complete
+  setItemComplete = (e, index) => {
+    // Updating Completion status for an item
+    this.setState((state) => ({
+      items: state.items.map((item, itemIndex) => {
+        if (itemIndex === index) {
+          item.isComplete = true;
+        }
+
+        return item;
+      }),
+    }));
+  };
+
   // Updates the state of an item that may possibly added to items
   setItem = (e) => {
     this.setState({ item: e.target.value });
@@ -48,8 +62,14 @@ class TodoList extends React.Component {
           <button onClick={this.addItem}>Add</button>
         </div>
 
-        {this.state.items.map(({ name, isComplete }) => (
-          <Item key={name} name={name} isComplete={isComplete} />
+        {this.state.items.map(({ name, isComplete }, index) => (
+          <Item
+            key={index}
+            itemID={index}
+            name={name}
+            isComplete={isComplete}
+            onComplete={this.setItemComplete}
+          />
         ))}
       </div>
     );

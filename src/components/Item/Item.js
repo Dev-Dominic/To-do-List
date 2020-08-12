@@ -1,19 +1,21 @@
 import React from "react";
 
 class Item extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = { isComplete: this.props.isComplete };
-  }
-
-  markComplete = (e) => {};
+  markComplete = (e) => {
+    // Updates state of item in list of items
+    this.props.onComplete(e, this.props.itemID);
+  };
 
   render() {
     return (
       <div className="item">
-        <p>{this.props.name}</p>
-        <input type="checkbox" />
+        <p className="itemName">{this.props.name}</p>
+        <input
+          className="itemCheckBox"
+          type="checkbox"
+          onClick={this.markComplete}
+          disabled={this.props.isComplete}
+        />
       </div>
     );
   }
