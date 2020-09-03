@@ -1,79 +1,65 @@
-import React from "react";
+import React, { useState } from "react";
 import Item from "./Item.js";
 
-class TodoList extends React.Component {
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      item: "",
-      items: [
-        {
-          name: "This is the first item",
-          isComplete: false,
-        },
-      ],
-    };
-  }
+function TodoList() {
+  const [item, setItem] = useState("");
+  const [items, setItems] = useState([
+    { name: "First Item", isComplete: false },
+  ]);
 
   // Adds a new item to the array items
-  addItem = (e) => {
-    e.preventDefault();
-
-    /*
-      Updating the array of items with a new item and resetting the value of item
-    */
-    this.setState((state) => ({
-      items: [...state.items, { name: state.item, isComplete: false }],
-      item: "",
-    }));
+  const addItem = (condition) => {
+    if (condition) {
+      setItems([...items, { name: item, isComplete: false }]);
+      setItem("");
+    }
   };
 
-  // Marks an item as complete
-  setItemComplete = (e, index) => {
-    // Updating Completion status for an item
-    this.setState((state) => ({
-      items: state.items.map((item, itemIndex) => {
-        if (itemIndex === index) {
-          item.isComplete = true;
-        }
+  const addItemButton = () => addItem(item);
+  const addItemEnter = (e) => addItem(item && e.key === "Enter");
 
-        return item;
-      }),
-    }));
+  // Marks an item as complete
+  const setItemComplete = (e, index) => {
+    const updatedItems = [...items];
+    updatedItems[index].isComplete = true;
+    setItems(updatedItems);
   };
 
   // Updates the state of an item that may possibly added to items
-  setItem = (e) => {
-    this.setState({ item: e.target.value });
-  };
+  const updateItem = (e) => setItem(e.target.value);
 
-  render() {
-    return (
-      <div className="todo-list">
-        <div className="todo-list-toolbar">
-          <input
-            type="text"
-            id="addItemField"
-            placeholder="Add a new item"
-            value={this.state.item}
-            onChange={this.setItem}
-          />
-          <button onClick={this.addItem}>Add</button>
-        </div>
+  return (
+    <div className="mt-2">
+      <div className="flex justify-between">
+        <input
+          className="w-4/5 py-1 px-2"
+          type="text"
+          placeholder="Add a new item"
+          value={item}
+          onChange={updateItem}
+          onKeyPress={addItemEnter}
+        />
+        <button
+          className="border w-1/6 bg-gray-500 text-sm text-white font-semibold"
+          onClick={addItemButton}
+        >
+          Add
+        </button>
+      </div>
 
-        {this.state.items.map(({ name, isComplete }, index) => (
+      <div className="mt-4">
+        {items.map(({ name, isComplete }, index) => (
           <Item
             key={index}
             itemID={index}
             name={name}
             isComplete={isComplete}
-            onComplete={this.setItemComplete}
+            onComplete={setItemComplete}
           />
         ))}
       </div>
-    );
-  }
+    </div>
+  );
 }
 
 export default TodoList;
